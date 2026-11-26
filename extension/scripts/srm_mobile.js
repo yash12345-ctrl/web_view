@@ -160,15 +160,137 @@
     document.documentElement.classList.remove('srm-ext-has-nav');
   }
 
+  function buildProfileHeroCard() {
+    if (!isLoggedInPage()) return;
+    if (document.getElementById('srm-hero-profile')) return;
+
+    // Detect the Student Profile card by its header text
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const profileCard = cards.find((c) => {
+      const h = c.querySelector('.card-header');
+      return h && /student\s*profile/i.test(h.textContent || '');
+    });
+    if (!profileCard) return;
+
+    // Extract key student fields from the profile table
+    const fields = {};
+    profileCard.querySelectorAll('tr').forEach((tr) => {
+      const cells = tr.querySelectorAll('td, th');
+      if (cells.length >= 2) {
+        const key = (cells[0].textContent || '').trim().toLowerCase();
+        const val = (cells[1].textContent || '').trim();
+        if (key && val) fields[key] = val;
+      }
+    });
+
+    // Find the student's profile photo card (separate card containing a student image)
+    let photoSrc = '';
+    let photoCard = null;
+    for (const c of cards) {
+      if (c === profileCard) continue;
+      const imgs = Array.from(c.querySelectorAll('img')).filter((img) => {
+        const s = (img.getAttribute('src') || '').toLowerCase();
+        return s && !s.includes('srmist') && !s.includes('logo') && !s.includes('wait.gif');
+      });
+      if (imgs.length > 0) {
+        photoSrc = imgs[0].src;
+        photoCard = c;
+        break;
+      }
+    }
+
+    const name = fields['student name'] || '';
+    const regNo = fields['register no.'] || fields['register no'] || '';
+    const studentId = fields['student id'] || '';
+    const program = fields['program'] || '';
+    const semester = fields['semester'] || '';
+
+    if (!name && !photoSrc) return;
+
+    const hero = document.createElement('div');
+    hero.id = 'srm-hero-profile';
+
+    const top = document.createElement('div');
+    top.className = 'srm-hero-top';
+
+    if (photoSrc) {
+      const avatar = document.createElement('img');
+      avatar.className = 'srm-hero-avatar';
+      avatar.src = photoSrc;
+      avatar.alt = name || 'Student Photo';
+      top.appendChild(avatar);
+    }
+
+    const info = document.createElement('div');
+    info.className = 'srm-hero-info';
+
+    if (name) {
+      const nameEl = document.createElement('div');
+      nameEl.className = 'srm-hero-name';
+      nameEl.textContent = name;
+      info.appendChild(nameEl);
+    }
+    if (regNo) {
+      const regEl = document.createElement('div');
+      regEl.className = 'srm-hero-reg';
+      regEl.textContent = regNo;
+      info.appendChild(regEl);
+    }
+
+    top.appendChild(info);
+    hero.appendChild(top);
+
+    if (program) {
+      const progEl = document.createElement('div');
+      progEl.className = 'srm-hero-program';
+      progEl.textContent = program;
+      hero.appendChild(progEl);
+    }
+
+    if (semester || studentId) {
+      const pills = document.createElement('div');
+      pills.className = 'srm-hero-pills';
+      if (semester) {
+        const p1 = document.createElement('span');
+        p1.className = 'srm-hero-pill';
+        p1.textContent = 'Semester ' + semester;
+        pills.appendChild(p1);
+      }
+      if (studentId) {
+        const p2 = document.createElement('span');
+        p2.className = 'srm-hero-pill';
+        p2.textContent = 'ID: ' + studentId;
+        pills.appendChild(p2);
+      }
+      hero.appendChild(pills);
+    }
+
+    const targetContainer = profileCard.parentNode;
+    if (targetContainer) {
+      targetContainer.insertBefore(hero, profileCard);
+    }
+
+    // Hide the duplicate bottom photo-only card cleanly
+    if (photoCard && !photoCard.querySelector('table')) {
+      photoCard.classList.add('srm-hidden-photo-card');
+    }
+  }
+
   function enableMobileUI() {
     document.documentElement.classList.add('srm-ext-active');
     ensureViewport();
     wrapWideTables(document);
+    buildProfileHeroCard();
     mountBottomNav();
   }
 
   function disableMobileUI() {
     document.documentElement.classList.remove('srm-ext-active');
+    const hero = document.getElementById('srm-hero-profile');
+    if (hero) hero.remove();
+    document.querySelectorAll('.srm-hidden-photo-card').forEach((el) => {
+      el.classList.remove('srm-hidden-photo-card');
+    });
     removeBottomNav();
   }
 
@@ -181,6 +303,7 @@
       clearTimeout(timer);
       timer = setTimeout(() => {
         wrapWideTables(document);
+        buildProfileHeroCard();
         mountBottomNav();
       }, 150);
     });

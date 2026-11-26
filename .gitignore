@@ -10,6 +10,7 @@
 .cxx
 *.apk
 *.aab
+*.zip
 *.jks
 *.keystore
 !app/srm-debug.keystore

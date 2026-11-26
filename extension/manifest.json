@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Better SRM Portal (Mobile UI)",
   "short_name": "SRM Mobile",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Makes the official SRMIST Student Portal cleanly mobile-responsive with a modern bottom navigation bar and scrollable tables.",
   "icons": {
     "48": "icons/icon-48.png",

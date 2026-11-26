@@ -1,14 +1,15 @@
 /*
- * Better SRM Portal — Production Browser Extension CSS
+ * Better SRM Portal — Premium Mobile UI v1.1.0
  * Active when html has class `srm-ext-active` (respects extension toggle).
  */
 
 :root {
   --srm-blue: #0C4DA2;
-  --srm-blue-dark: #083570;
+  --srm-blue-dark: #072A5C;
+  --srm-blue-mid: #1565C0;
   --srm-blue-soft: #EBF3FF;
   --srm-gold: #F2A900;
-  --srm-bg: #F4F7FB;
+  --srm-bg: #F1F5F9;
   --srm-surface: #FFFFFF;
   --srm-border: #E2E8F0;
   --srm-text: #0F172A;
@@ -23,6 +24,7 @@ html.srm-ext-active body {
   color: var(--srm-text) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   -webkit-text-size-adjust: 100% !important;
+  -webkit-font-smoothing: antialiased !important;
   box-sizing: border-box !important;
 }
 
@@ -46,21 +48,38 @@ html.srm-ext-active main {
   background-color: transparent !important;
 }
 
-/* Sticky, non-overlapping top navbar */
+/* Remove desktop fixed-navbar empty gap */
+html.srm-ext-active #layoutSidenav,
+html.srm-ext-active #layoutSidenav_content,
+html.srm-ext-active #content-wrapper,
+html.srm-ext-active #content,
+html.srm-ext-active main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+html.srm-ext-active main > .container,
+html.srm-ext-active main > .container-fluid {
+  padding-top: 12px !important;
+}
+
+/* Sleek single-row sticky app header */
 html.srm-ext-active nav.navbar,
 html.srm-ext-active .topbar,
 html.srm-ext-active header.navbar {
   position: sticky !important;
   top: 0 !important;
-  z-index: 1020 !important;
+  z-index: 1030 !important;
   height: auto !important;
-  min-height: 58px !important;
+  min-height: 56px !important;
   padding: 8px 14px !important;
-  background: var(--srm-surface) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid var(--srm-border) !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06) !important;
   display: flex !important;
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 8px !important;
@@ -69,7 +88,7 @@ html.srm-ext-active header.navbar {
 html.srm-ext-active nav.navbar img,
 html.srm-ext-active .topbar img,
 html.srm-ext-active header.navbar img {
-  max-height: 38px !important;
+  max-height: 34px !important;
   width: auto !important;
   object-fit: contain !important;
   margin: 0 !important;
@@ -77,29 +96,144 @@ html.srm-ext-active header.navbar img {
 
 html.srm-ext-active .navbar-brand,
 html.srm-ext-active .topbar .navbar-brand {
-  padding: 2px 0 !important;
+  padding: 0 !important;
   margin: 0 !important;
   height: auto !important;
-  line-height: 1.2 !important;
-  font-size: 15px !important;
+  line-height: 1.15 !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   color: var(--srm-blue-dark) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
 }
 
-html.srm-ext-active #layoutSidenav_content,
-html.srm-ext-active #content-wrapper,
-html.srm-ext-active #content,
-html.srm-ext-active main > .container,
-html.srm-ext-active main > .container-fluid {
-  padding-top: 10px !important;
+/* Clean pill styling for Logout link in header */
+html.srm-ext-active nav.navbar a[href*="logout" i],
+html.srm-ext-active nav.navbar a[onclick*="logout" i],
+html.srm-ext-active .topbar a[href*="logout" i] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border: 1px solid #FECACA !important;
+}
+
+/* Premium Student Profile Hero Card (injected at top of Profile page) */
+#srm-hero-profile {
+  position: relative;
+  border-radius: 20px;
+  padding: 20px 18px 18px;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, #072A5C 0%, #0C4DA2 58%, #1976D2 100%);
+  color: #FFFFFF;
+  box-shadow: 0 10px 26px rgba(12, 77, 162, 0.24);
+  overflow: hidden;
+}
+
+#srm-hero-profile::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(242, 169, 0, 0.14);
+  pointer-events: none;
+}
+
+#srm-hero-profile .srm-hero-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+#srm-hero-profile .srm-hero-avatar {
+  width: 76px !important;
+  height: 76px !important;
+  min-width: 76px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  border: 3px solid var(--srm-gold) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28) !important;
+  background: #FFFFFF;
+}
+
+#srm-hero-profile .srm-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#srm-hero-profile .srm-hero-name {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #FFFFFF;
+  margin-bottom: 5px;
+  letter-spacing: 0.2px;
+}
+
+#srm-hero-profile .srm-hero-reg {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FEF3C7;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+}
+
+#srm-hero-profile .srm-hero-program {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+#srm-hero-profile .srm-hero-pills {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+#srm-hero-profile .srm-hero-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.srm-hidden-photo-card {
+  display: none !important;
 }
 
 /* Elevated modern cards */
 html.srm-ext-active .card {
   background: var(--srm-surface) !important;
   border: 1px solid var(--srm-border) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
   margin-bottom: 14px !important;
   overflow: hidden !important;
 }
@@ -110,13 +244,14 @@ html.srm-ext-active .card-header.bg-primary {
   background: linear-gradient(135deg, #0C4DA2 0%, #1565C0 100%) !important;
   color: #FFFFFF !important;
   border-bottom: none !important;
-  padding: 14px 16px !important;
-  font-size: 15px !important;
+  padding: 13px 16px !important;
+  font-size: 14.5px !important;
   font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
 }
 
 html.srm-ext-active .card-body {
-  padding: 14px !important;
+  padding: 12px 14px !important;
 }
 
 /* Clean 2-column profile/info tables */
@@ -136,9 +271,9 @@ html.srm-ext-active .card table:not(.srm-wide-table) tr:last-child {
 
 html.srm-ext-active .card table:not(.srm-wide-table) td,
 html.srm-ext-active .card table:not(.srm-wide-table) th {
-  padding: 12px 10px !important;
+  padding: 11px 8px !important;
   vertical-align: top !important;
-  font-size: 14px !important;
+  font-size: 13.5px !important;
   line-height: 1.45 !important;
   border: none !important;
 }
@@ -182,8 +317,9 @@ html.srm-ext-active .srm-table-scroll thead th {
   background-color: #F8FAFC !important;
   color: var(--srm-blue-dark) !important;
   font-weight: 600 !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
   border-bottom: 1px solid var(--srm-border) !important;
   padding: 10px 12px !important;
   white-space: nowrap !important;
@@ -191,7 +327,7 @@ html.srm-ext-active .srm-table-scroll thead th {
 
 html.srm-ext-active .srm-table-scroll tbody td {
   padding: 10px 12px !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   border-bottom: 1px solid #F1F5F9 !important;
   white-space: nowrap !important;
 }
@@ -205,7 +341,7 @@ html.srm-ext-active .srm-table-scroll tbody td {
     max-width: 100% !important;
   }
 
-  /* Force all Bootstrap columns & cards to full width so nothing squishes left */
+  /* Force all Bootstrap columns & cards to full width */
   html.srm-ext-active #layoutSidenav_content {
     margin-left: 0 !important;
     padding-left: 0 !important;
@@ -242,7 +378,7 @@ html.srm-ext-active .srm-table-scroll tbody td {
   html.srm-ext-active .mt-5,
   html.srm-ext-active .my-4,
   html.srm-ext-active .my-5 {
-    margin-top: 12px !important;
+    margin-top: 8px !important;
   }
 
   html.srm-ext-active img {
@@ -290,7 +426,7 @@ html.srm-ext-active .srm-table-scroll tbody td {
   }
 }
 
-/* Material 3-inspired Mobile Bottom Navigation Bar */
+/* Material 3 Mobile Bottom Navigation Bar */
 html.srm-ext-has-nav body {
   padding-bottom: 84px !important;
 }
@@ -355,7 +491,6 @@ html.srm-ext-has-nav body {
   background: #EBF3FF;
 }
 
-/* Hide bottom bar on wide desktop monitors */
 @media (min-width: 900px) {
   #srm-ext-bottom-nav {
     display: none !important;
