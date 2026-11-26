@@ -140,9 +140,26 @@
         }
     };
 
+    function ensureCaptchaLoaded() {
+        var img = document.getElementById('secure_captcha') || document.getElementById('captchaImg');
+        if (!img || img.dataset.srmRetryScheduled) {
+            return;
+        }
+        img.dataset.srmRetryScheduled = '1';
+        setTimeout(function () {
+            if (!img.complete || img.naturalWidth === 0 || !img.getAttribute('src')) {
+                var refreshBtn = document.getElementById('btnRefresh');
+                if (refreshBtn) {
+                    refreshBtn.click();
+                }
+            }
+        }, 1800);
+    }
+
     function applyEnhancements(root) {
         ensureViewport();
         detectAuthState();
+        ensureCaptchaLoaded();
         wrapWideTables(root);
         clampFixedWidths(root);
     }

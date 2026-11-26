@@ -2,6 +2,7 @@ package com.srm.mobileportal
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.webkit.CookieManager
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -39,6 +40,7 @@ class PortalWebViewClient(
 
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
+        CookieManager.getInstance().flush()
         assetInjector.injectIfPortalPage(view, url)
         onPageFinishedCallback()
     }

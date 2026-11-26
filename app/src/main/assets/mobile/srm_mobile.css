@@ -226,13 +226,17 @@ main > .container-fluid {
         height: auto !important;
     }
 
-    /* Keep CAPTCHA crisp and easy to read */
+    /* Keep CAPTCHA crisp, visible, and aligned with refresh button */
     #secure_captcha,
     #captchaImg {
+        display: inline-block !important;
+        width: auto !important;
         max-width: 100% !important;
-        min-height: 46px !important;
+        min-width: 140px !important;
+        min-height: 48px !important;
         object-fit: contain !important;
         border-radius: 8px !important;
+        margin-top: 8px !important;
     }
 
     /* Modern touch-friendly inputs & selects */
