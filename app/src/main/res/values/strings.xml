@@ -11,4 +11,11 @@
     <string name="nav_marks">Marks</string>
     <string name="nav_fees">Fees</string>
     <string name="nav_menu">Menu</string>
+    <string name="update_title">Update Available (v%1$s)</string>
+    <string name="update_default_notes">A new version of SRM Portal is available with improvements and fixes.</string>
+    <string name="update_now">Update Now</string>
+    <string name="update_later">Later</string>
+    <string name="update_downloading">Downloading update v%1$s…</string>
+    <string name="update_download_failed">Failed to download update. Try again later.</string>
+    <string name="update_install_permission">Please allow installing updates from SRM Portal, then tap Update again.</string>
 </resources>

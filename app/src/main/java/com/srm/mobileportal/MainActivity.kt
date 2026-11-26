@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
         if (currentUrl.isNullOrBlank() || currentUrl == "about:blank") {
             binding.portalWebView.loadUrl(PortalConfig.LOGIN_URL)
         }
+
+        UpdateChecker(this).checkForUpdates()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

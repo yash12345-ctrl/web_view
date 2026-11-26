@@ -9,4 +9,7 @@ object PortalConfig {
     const val MOBILE_CSS_ASSET = "mobile/srm_mobile.css"
     const val MOBILE_JS_ASSET = "mobile/srm_mobile.js"
     const val STYLE_TAG_ID = "srm-mobile-responsive-style"
+
+    const val GITHUB_LATEST_RELEASE_URL =
+        "https://api.github.com/repos/yash12345-ctrl/web_view/releases/latest"
 }
