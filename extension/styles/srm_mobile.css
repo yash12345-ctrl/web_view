@@ -224,7 +224,8 @@ html.srm-ext-active .topbar a[href*="logout" i] {
   border-radius: 8px;
 }
 
-.srm-hidden-photo-card {
+.srm-hidden-photo-card,
+.srm-hidden-chart-card {
   display: none !important;
 }
 

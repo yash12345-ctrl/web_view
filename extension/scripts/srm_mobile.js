@@ -276,11 +276,23 @@
     }
   }
 
+  function hideAttendanceChartCards() {
+    document.querySelectorAll('.card').forEach((card) => {
+      const header = card.querySelector('.card-header');
+      if (!header) return;
+      const text = (header.textContent || '').trim();
+      if (/course\s*wise\s*attendance/i.test(text) || /attendance\s*hours/i.test(text)) {
+        card.classList.add('srm-hidden-chart-card');
+      }
+    });
+  }
+
   function enableMobileUI() {
     document.documentElement.classList.add('srm-ext-active');
     ensureViewport();
     wrapWideTables(document);
     buildProfileHeroCard();
+    hideAttendanceChartCards();
     mountBottomNav();
   }
 
@@ -288,8 +300,8 @@
     document.documentElement.classList.remove('srm-ext-active');
     const hero = document.getElementById('srm-hero-profile');
     if (hero) hero.remove();
-    document.querySelectorAll('.srm-hidden-photo-card').forEach((el) => {
-      el.classList.remove('srm-hidden-photo-card');
+    document.querySelectorAll('.srm-hidden-photo-card, .srm-hidden-chart-card').forEach((el) => {
+      el.classList.remove('srm-hidden-photo-card', 'srm-hidden-chart-card');
     });
     removeBottomNav();
   }
@@ -304,6 +316,7 @@
       timer = setTimeout(() => {
         wrapWideTables(document);
         buildProfileHeroCard();
+        hideAttendanceChartCards();
         mountBottomNav();
       }, 150);
     });
