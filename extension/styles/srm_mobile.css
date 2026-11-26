@@ -145,16 +145,18 @@ html.srm-ext-active .card table:not(.srm-wide-table) th {
 
 html.srm-ext-active .card table:not(.srm-wide-table) td:first-child,
 html.srm-ext-active .card table:not(.srm-wide-table) th:first-child {
-  width: 40% !important;
+  width: 38% !important;
   color: var(--srm-muted) !important;
   font-weight: 500 !important;
+  word-break: normal !important;
 }
 
 html.srm-ext-active .card table:not(.srm-wide-table) td:last-child {
-  width: 60% !important;
+  width: 62% !important;
   color: var(--srm-text) !important;
   font-weight: 600 !important;
-  word-break: break-word !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
 }
 
 /* Smooth horizontal scroll for wide tables */
@@ -199,6 +201,48 @@ html.srm-ext-active .srm-table-scroll tbody td {
   html.srm-ext-active .container-fluid {
     padding-left: 12px !important;
     padding-right: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Force all Bootstrap columns & cards to full width so nothing squishes left */
+  html.srm-ext-active #layoutSidenav_content {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
+
+  html.srm-ext-active .row {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+
+  html.srm-ext-active .row > [class*="col-"],
+  html.srm-ext-active .row > .col,
+  html.srm-ext-active [class*="col-md-"],
+  html.srm-ext-active [class*="col-lg-"],
+  html.srm-ext-active [class*="col-xl-"],
+  html.srm-ext-active [class*="col-sm-"] {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  html.srm-ext-active .card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  html.srm-ext-active .mt-4,
+  html.srm-ext-active .mt-5,
+  html.srm-ext-active .my-4,
+  html.srm-ext-active .my-5 {
+    margin-top: 12px !important;
   }
 
   html.srm-ext-active img {
