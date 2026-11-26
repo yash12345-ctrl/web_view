@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SRM Portal</string>
+    <string name="offline_title">Unable to reach SRM Portal</string>
+    <string name="offline_subtitle">Check your internet connection or try again in a moment.</string>
+    <string name="action_retry">Retry</string>
+    <string name="downloading_file">Downloading %1$s…</string>
+    <string name="download_failed">Could not start download</string>
+    <string name="nav_home">Profile</string>
+    <string name="nav_attendance">Attendance</string>
+    <string name="nav_marks">Marks</string>
+    <string name="nav_fees">Fees</string>
+    <string name="nav_menu">Menu</string>
+</resources>

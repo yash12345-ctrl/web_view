@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SRMMobilePortal" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/srm_blue</item>
+        <item name="colorPrimaryDark">@color/srm_blue_dark</item>
+        <item name="colorSecondary">@color/srm_gold</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/nav_surface</item>
+        <item name="android:windowBackground">@color/surface_bg</item>
+    </style>
+
+    <style name="Widget.SRM.BottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/srm_blue_soft</item>
+        <item name="android:width">56dp</item>
+        <item name="android:height">32dp</item>
+    </style>
+</resources>

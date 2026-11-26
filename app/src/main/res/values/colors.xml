@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="srm_blue">#0C4DA2</color>
+    <color name="srm_blue_dark">#083570</color>
+    <color name="srm_blue_soft">#EBF3FF</color>
+    <color name="srm_gold">#F2A900</color>
+    <color name="surface_bg">#F4F7FB</color>
+    <color name="nav_surface">#FFFFFF</color>
+    <color name="nav_divider">#E2E8F0</color>
+    <color name="nav_inactive">#64748B</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="white">#FFFFFF</color>
+</resources>
