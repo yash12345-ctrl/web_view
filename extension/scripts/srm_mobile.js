@@ -276,14 +276,32 @@
     }
   }
 
-  function hideAttendanceChartCards() {
-    document.querySelectorAll('.card').forEach((card) => {
+  function hideAttendanceChartCards(rootDoc) {
+    const doc = rootDoc || document;
+    doc.querySelectorAll('.card').forEach((card) => {
+      // Never hide data table cards (e.g., Course Wise Attendance table)
+      if (card.querySelector('table')) return;
+
       const header = card.querySelector('.card-header');
-      if (!header) return;
-      const text = (header.textContent || '').trim();
-      if (/course\s*wise\s*attendance/i.test(text) || /attendance\s*hours/i.test(text)) {
+      const text = (header ? header.textContent : '').trim();
+      const hasChartCanvas = !!card.querySelector('canvas');
+      const isAttendanceChartHeader =
+        /course\s*wise\s*attendance\s*\(%\)/i.test(text) ||
+        /attendance\s*hours/i.test(text);
+
+      if (hasChartCanvas || isAttendanceChartHeader) {
         card.classList.add('srm-hidden-chart-card');
+        card.style.setProperty('display', 'none', 'important');
       }
+    });
+
+    // Also check same-origin iframes if any inner page renders inside one
+    doc.querySelectorAll('iframe').forEach((frame) => {
+      try {
+        if (frame.contentDocument) {
+          hideAttendanceChartCards(frame.contentDocument);
+        }
+      } catch (_) {}
     });
   }
 
@@ -292,7 +310,7 @@
     ensureViewport();
     wrapWideTables(document);
     buildProfileHeroCard();
-    hideAttendanceChartCards();
+    hideAttendanceChartCards(document);
     mountBottomNav();
   }
 
@@ -302,6 +320,7 @@
     if (hero) hero.remove();
     document.querySelectorAll('.srm-hidden-photo-card, .srm-hidden-chart-card').forEach((el) => {
       el.classList.remove('srm-hidden-photo-card', 'srm-hidden-chart-card');
+      el.style.removeProperty('display');
     });
     removeBottomNav();
   }
