@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         val webView = binding.portalWebView
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
 
         CookieManager.getInstance().apply {
             setAcceptCookie(true)
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             builtInZoomControls = true
             displayZoomControls = false
             mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
-            cacheMode = WebSettings.LOAD_NO_CACHE
+            cacheMode = WebSettings.LOAD_DEFAULT
         }
 
         webView.addJavascriptInterface(PortalJsBridge(), "AndroidBridge")
