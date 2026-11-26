@@ -342,14 +342,25 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
+  function readStorage(defaults, cb) {
+    if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
+      browser.storage.local.get(defaults).then(cb, () => cb(defaults));
+    } else if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.get(defaults, cb);
+    } else {
+      cb(defaults);
+    }
+  }
+
   function init() {
-    if (api && api.storage && api.storage.local) {
-      api.storage.local.get({ srmMobileEnabled: true }, (res) => {
-        if (res.srmMobileEnabled !== false) {
-          enableMobileUI();
-          startObserver();
-        }
-      });
+    readStorage({ srmMobileEnabled: true }, (res) => {
+      if (res.srmMobileEnabled !== false) {
+        enableMobileUI();
+        startObserver();
+      }
+    });
+
+    if (api && api.storage && api.storage.onChanged) {
       api.storage.onChanged.addListener((changes) => {
         if (changes.srmMobileEnabled) {
           if (changes.srmMobileEnabled.newValue !== false) {
@@ -360,9 +371,6 @@
           }
         }
       });
-    } else {
-      enableMobileUI();
-      startObserver();
     }
   }
 
