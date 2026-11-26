@@ -1,0 +1,215 @@
+(function () {
+  'use strict';
+
+  const api = typeof browser !== 'undefined' ? browser : (typeof chrome !== 'undefined' ? chrome : null);
+
+  const NAV_ITEMS = [
+    {
+      key: 'home',
+      label: 'Profile',
+      keywords: ['student profile', 'dashboard', 'profile', 'home'],
+      icon: '<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'
+    },
+    {
+      key: 'attendance',
+      label: 'Attendance',
+      keywords: ['attendance'],
+      icon: '<svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zm-2.47-7.94L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94z"/></svg>'
+    },
+    {
+      key: 'marks',
+      label: 'Marks',
+      keywords: ['internal mark', 'mark', 'grade', 'exam', 'result'],
+      icon: '<svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>'
+    },
+    {
+      key: 'fees',
+      label: 'Fees',
+      keywords: ['fee', 'finance', 'payment', 'dues'],
+      icon: '<svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>'
+    },
+    {
+      key: 'menu',
+      label: 'Menu',
+      keywords: [],
+      icon: '<svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>'
+    }
+  ];
+
+  function isLoggedInPage() {
+    const url = (window.location.href || '').toLowerCase();
+    const isLoginUrl = url.includes('youlogin.jsp') || url.includes('loginmanager');
+    const hasLoginForm = !!document.getElementById('divLogin') || !!document.getElementById('btnLogin');
+    return !isLoginUrl && !hasLoginForm;
+  }
+
+  function ensureViewport() {
+    let meta = document.querySelector('meta[name="viewport"]');
+    const content = 'width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes';
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = content;
+      if (document.head) document.head.appendChild(meta);
+    } else {
+      meta.setAttribute('content', content);
+    }
+  }
+
+  function wrapWideTables(root) {
+    const tables = (root || document).querySelectorAll('table');
+    tables.forEach((table) => {
+      if (table.closest('.srm-table-scroll') || table.closest('.table-responsive')) return;
+      const cols = table.rows && table.rows.length > 0 ? table.rows[0].cells.length : 0;
+      if (cols <= 2 && !table.querySelector('thead')) return;
+      table.classList.add('srm-wide-table');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'srm-table-scroll';
+      if (table.parentNode) {
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
+    });
+  }
+
+  function toggleSidebarDrawer() {
+    const selectors = [
+      '#sidebarToggle',
+      '#sidebarToggleTop',
+      '.navbar-toggler',
+      '[data-toggle="sidebar"]',
+      '[data-bs-toggle="offcanvas"]',
+      'button .fa-bars',
+      'a .fa-bars',
+      '.fa-bars'
+    ];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        (el.closest('button, a') || el).click();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function clickMenuByKeywords(keywords) {
+    const candidates = document.querySelectorAll(
+      '#layoutSidenav_nav a, .sidenav a, .sidebar a, nav a, .nav-link, [onclick]'
+    );
+    for (const kw of keywords) {
+      for (const el of candidates) {
+        if (el.closest('#srm-ext-bottom-nav')) continue;
+        const text = (el.textContent || '').trim().toLowerCase();
+        const href = (el.getAttribute('href') || '').toLowerCase();
+        const onclick = (el.getAttribute('onclick') || '').toLowerCase();
+        if (text.includes('logout') || href.includes('logout')) continue;
+        if (text.includes(kw) || href.includes(kw) || onclick.includes(kw)) {
+          el.click();
+          if (document.body.classList.contains('sidenav-toggled')) {
+            setTimeout(() => document.body.classList.remove('sidenav-toggled'), 150);
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function mountBottomNav() {
+    if (!isLoggedInPage()) {
+      removeBottomNav();
+      return;
+    }
+    if (document.getElementById('srm-ext-bottom-nav')) return;
+
+    const nav = document.createElement('nav');
+    nav.id = 'srm-ext-bottom-nav';
+    nav.setAttribute('aria-label', 'SRM Portal Navigation');
+
+    NAV_ITEMS.forEach((item, index) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'srm-nav-btn' + (index === 0 ? ' is-active' : '');
+      btn.dataset.tab = item.key;
+      btn.innerHTML = `<span class="srm-nav-pill">${item.icon}</span><span>${item.label}</span>`;
+
+      btn.addEventListener('click', () => {
+        if (item.key === 'menu') {
+          toggleSidebarDrawer();
+          return;
+        }
+        nav.querySelectorAll('.srm-nav-btn').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        if (!clickMenuByKeywords(item.keywords)) {
+          toggleSidebarDrawer();
+        }
+      });
+
+      nav.appendChild(btn);
+    });
+
+    document.body.appendChild(nav);
+    document.documentElement.classList.add('srm-ext-has-nav');
+  }
+
+  function removeBottomNav() {
+    const nav = document.getElementById('srm-ext-bottom-nav');
+    if (nav) nav.remove();
+    document.documentElement.classList.remove('srm-ext-has-nav');
+  }
+
+  function enableMobileUI() {
+    document.documentElement.classList.add('srm-ext-active');
+    ensureViewport();
+    wrapWideTables(document);
+    mountBottomNav();
+  }
+
+  function disableMobileUI() {
+    document.documentElement.classList.remove('srm-ext-active');
+    removeBottomNav();
+  }
+
+  let observer = null;
+  function startObserver() {
+    if (observer || !document.body) return;
+    let timer = null;
+    observer = new MutationObserver(() => {
+      if (!document.documentElement.classList.contains('srm-ext-active')) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        wrapWideTables(document);
+        mountBottomNav();
+      }, 150);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function init() {
+    if (api && api.storage && api.storage.local) {
+      api.storage.local.get({ srmMobileEnabled: true }, (res) => {
+        if (res.srmMobileEnabled !== false) {
+          enableMobileUI();
+          startObserver();
+        }
+      });
+      api.storage.onChanged.addListener((changes) => {
+        if (changes.srmMobileEnabled) {
+          if (changes.srmMobileEnabled.newValue !== false) {
+            enableMobileUI();
+            startObserver();
+          } else {
+            disableMobileUI();
+          }
+        }
+      });
+    } else {
+      enableMobileUI();
+      startObserver();
+    }
+  }
+
+  init();
+})();

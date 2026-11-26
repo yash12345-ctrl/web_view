@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Better SRM Portal (Mobile UI)",
+  "short_name": "SRM Mobile",
+  "version": "1.0.0",
+  "description": "Makes the official SRMIST Student Portal cleanly mobile-responsive with a modern bottom navigation bar and scrollable tables.",
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_title": "Better SRM Portal",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://sp.srmist.edu.in/*"
+      ],
+      "css": [
+        "styles/srm_mobile.css"
+      ],
+      "js": [
+        "scripts/srm_mobile.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "better-srm-portal@yash12345-ctrl",
+      "strict_min_version": "109.0"
+    },
+    "gecko_android": {
+      "strict_min_version": "120.0"
+    }
+  }
+}
