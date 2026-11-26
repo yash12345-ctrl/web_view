@@ -12,6 +12,9 @@
   "permissions": [
     "storage"
   ],
+  "host_permissions": [
+    "https://sp.srmist.edu.in/*"
+  ],
   "action": {
     "default_title": "Better SRM Portal",
     "default_popup": "popup/popup.html",
