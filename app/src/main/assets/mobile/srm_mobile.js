@@ -140,89 +140,9 @@
         }
     };
 
-    function showCaptchaDiag(img, text) {
-        var box = document.getElementById('srm-captcha-diag');
-        if (!box) {
-            box = document.createElement('div');
-            box.id = 'srm-captcha-diag';
-            box.style.cssText =
-                'margin-top:6px;padding:6px 8px;font-size:11px;line-height:1.35;' +
-                'background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;' +
-                'border-radius:8px;word-break:break-all;';
-            if (img.parentNode) {
-                img.parentNode.appendChild(box);
-            }
-        }
-        box.textContent = text;
-    }
-
-    function ensureCaptchaLoaded() {
-        var img = document.getElementById('secure_captcha') || document.getElementById('captchaImg');
-        if (!img || img.dataset.srmRetryScheduled) {
-            return;
-        }
-        img.dataset.srmRetryScheduled = '1';
-        setTimeout(function () {
-            var curSrc = img.getAttribute('src') || '';
-            if (img.complete && img.naturalWidth > 0 && curSrc) {
-                return;
-            }
-            var dataSrc = img.getAttribute('data-src') || '';
-            var nonce = (window.SECURE_CONFIG && window.SECURE_CONFIG.nonce) || '';
-            var host = window.location.hostname || '';
-            showCaptchaDiag(
-                img,
-                'DEBUG: src=' + (curSrc ? curSrc.slice(0, 28) : 'EMPTY') +
-                ' | w=' + img.naturalWidth +
-                ' | host=' + host +
-                ' | hasDataSrc=' + (!!dataSrc) +
-                ' | hasNonce=' + (!!nonce) +
-                ' | checking XHR...'
-            );
-            if (!dataSrc) return;
-            try {
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', dataSrc, true);
-                if (nonce) {
-                    xhr.setRequestHeader('X-Domain-Proof', window.btoa(nonce + ':' + host));
-                }
-                xhr.setRequestHeader('Accept', 'image/png, image/jpeg, image/*');
-                xhr.responseType = 'blob';
-                xhr.onload = function () {
-                    var ct = xhr.getResponseHeader('Content-Type') || 'none';
-                    var sz = xhr.response ? xhr.response.size : 0;
-                    if (xhr.status === 200 && ct.indexOf('image') !== -1 && sz > 0) {
-                        var reader = new FileReader();
-                        reader.onloadend = function () {
-                            img.src = reader.result;
-                            var box = document.getElementById('srm-captcha-diag');
-                            if (box) box.remove();
-                        };
-                        reader.readAsDataURL(xhr.response);
-                    } else {
-                        showCaptchaDiag(
-                            img,
-                            'DEBUG XHR: status=' + xhr.status +
-                            ' | type=' + ct +
-                            ' | size=' + sz +
-                            ' | cookies=' + (document.cookie ? 'yes' : 'empty')
-                        );
-                    }
-                };
-                xhr.onerror = function () {
-                    showCaptchaDiag(img, 'DEBUG XHR: network error');
-                };
-                xhr.send();
-            } catch (err) {
-                showCaptchaDiag(img, 'DEBUG ERR: ' + err.message);
-            }
-        }, 2000);
-    }
-
     function applyEnhancements(root) {
         ensureViewport();
         detectAuthState();
-        ensureCaptchaLoaded();
         wrapWideTables(root);
         clampFixedWidths(root);
     }
