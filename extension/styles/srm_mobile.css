@@ -225,7 +225,8 @@ html.srm-ext-active .topbar a[href*="logout" i] {
 }
 
 .srm-hidden-photo-card,
-.srm-hidden-chart-card {
+.srm-hidden-chart-card,
+html.srm-ext-active .card:has(canvas) {
   display: none !important;
 }
 

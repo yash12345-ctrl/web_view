@@ -279,17 +279,14 @@
   function hideAttendanceChartCards(rootDoc) {
     const doc = rootDoc || document;
     doc.querySelectorAll('.card').forEach((card) => {
-      // Never hide data table cards (e.g., Course Wise Attendance table)
-      if (card.querySelector('table')) return;
-
-      const header = card.querySelector('.card-header');
-      const text = (header ? header.textContent : '').trim();
-      const hasChartCanvas = !!card.querySelector('canvas');
+      const header = card.querySelector(':scope > .card-header') || card.querySelector('.card-header');
+      const text = (header ? header.textContent : '').replace(/\s+/g, ' ').trim();
       const isAttendanceChartHeader =
         /course\s*wise\s*attendance\s*\(%\)/i.test(text) ||
-        /attendance\s*hours/i.test(text);
+        /^attendance\s*hours$/i.test(text);
+      const hasOnlyChartCanvas = !!card.querySelector('canvas') && !card.querySelector('thead');
 
-      if (hasChartCanvas || isAttendanceChartHeader) {
+      if (isAttendanceChartHeader || hasOnlyChartCanvas) {
         card.classList.add('srm-hidden-chart-card');
         card.style.setProperty('display', 'none', 'important');
       }
